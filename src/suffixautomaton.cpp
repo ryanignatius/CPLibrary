@@ -185,7 +185,7 @@ class SuffixAutomaton {
         int automatonSingleMove(int pos, char ch){
             int n = pos;
             if (edges[n].find(ch) == edges[n].end()) {
-                return -1
+                return -1;
             }
             return edges[n][ch];
         }
