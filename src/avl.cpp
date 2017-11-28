@@ -80,6 +80,17 @@ class AVL {
             return y;
         }
 
+        Node* find(Node *node, int key) {
+            if (node == NULL) return NULL;
+            if (key == node->key) {
+                return node;
+            } else if (key < node->key) {
+                return find(node->left, key);
+            } else if (key > node->key) {
+                return find(node->right, key);
+            }
+        }
+
         Node* insert(Node *node, int key) {
             // 1. Perform the normal BST insertion
             if (node == NULL) {
@@ -164,6 +175,9 @@ class AVL {
             return last;
         }
         
+        Node* find(int key) {
+            return find(root, key);
+        }
         void insert(int key) {
             tempPrev = NULL;
             tempNext = NULL;
@@ -194,8 +208,17 @@ int main(){
     avl.preOrder();
     cout << endl;
     for (Node* node = avl.begin(); node != NULL; node = node->next){
-        cout << node->key << endl;
+        cout << node->key << " ";
     }
+    cout << endl;
+    for (Node* node = avl.end(); node != NULL; node = node->prev){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    cout << "Find 25: " << (avl.find(25) != NULL) << endl;
+    cout << "Find 50: " << (avl.find(50) != NULL) << endl;
+    cout << "Find 35: " << (avl.find(35) != NULL) << endl;
     return 0;
 }
 
