@@ -12,6 +12,7 @@ class Node {
         Node *prev;
         Node *next;
         int height;
+        int size;
 
         Node(dataType k){
             key = k;
@@ -20,6 +21,7 @@ class Node {
             prev = NULL;
             next = NULL;
             height = 1;
+            size = 1;
         }
 };
 
@@ -37,6 +39,14 @@ class AVL {
                 return 0;
             } else {
                 return N->height;
+            }
+        }
+
+        int getNodeSize(Node *N) {
+            if (N == NULL) {
+                return 0;
+            } else {
+                return N->size;
             }
         }
         
@@ -59,6 +69,10 @@ class AVL {
             // update height
             y->height = max(getNodeHeight(y->left), getNodeHeight(y->right)) + 1;
             x->height = max(getNodeHeight(x->left), getNodeHeight(x->right)) + 1;
+
+            // update size
+            y->size = getNodeSize(y->left) + getNodeSize(y->right) + 1;
+            x->size = getNodeSize(x->left) + getNodeSize(x->right) + 1;
             
             // return new root
             return x;
@@ -75,6 +89,10 @@ class AVL {
             // update height
             x->height = max(getNodeHeight(x->left), getNodeHeight(x->right)) + 1;
             y->height = max(getNodeHeight(y->left), getNodeHeight(y->right)) + 1;
+
+            // update size
+            x->size = getNodeSize(x->left) + getNodeSize(x->right) + 1;
+            y->size = getNodeSize(y->left) + getNodeSize(y->right) + 1;
             
             // return new root
             return y;
@@ -121,6 +139,7 @@ class AVL {
 
             // 2. Update height of this ancestor node
             node->height = 1 + max(getNodeHeight(node->left), getNodeHeight(node->right));
+            node->size = 1 + getNodeSize(node->left) + getNodeSize(node->right);
 
             // 3. Get the balance factor of this ancestor node to check whether this node became unbalanced
             int balance = getBalance(node);
@@ -156,7 +175,7 @@ class AVL {
 
         void preOrder(Node *node) {
             if (node != NULL) {
-                printf("%d ", node->key);
+                printf("Key: %d, Height: %d, Size: %d\n", node->key, node->height, node->size);
                 preOrder(node->left);
                 preOrder(node->right);
             }
