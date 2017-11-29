@@ -98,7 +98,7 @@ class AVL {
             return y;
         }
 
-        Node* find(Node *node, int key) {
+        Node* find(Node *node, dataType key) {
             if (node == NULL) return NULL;
             if (key == node->key) {
                 return node;
@@ -109,7 +109,7 @@ class AVL {
             }
         }
 
-        Node* insert(Node *node, int key) {
+        Node* insert(Node *node, dataType key) {
             // 1. Perform the normal BST insertion
             if (node == NULL) {
                 temp = new Node(key);
@@ -194,10 +194,10 @@ class AVL {
             return last;
         }
         
-        Node* find(int key) {
+        Node* find(dataType key) {
             return find(root, key);
         }
-        void insert(int key) {
+        void insert(dataType key) {
             tempPrev = NULL;
             tempNext = NULL;
             root = insert(root, key);
