@@ -177,47 +177,54 @@ class AVL {
             // STEP 1: PERFORM STANDARD BST DELETE
             if (node == NULL) return node;
             if (key < node->key) {
+                temp = node;
                 node->left = remove(node->left, key);
             } else if(key > node->key) {
+                temp = node;
                 node->right = remove(node->right, key);
             } else {
-                tempNext = node->next;
-                temp = node;
-                if (temp->next != NULL){
-                    temp->next->prev = temp->prev;
-                } else {
-                    last = temp->prev;
-                }
-                if (temp->prev != NULL){
-                    temp->prev->next = temp->next;
-                } else {
-                    first = temp->next;
-                }
                 // node with only one child or no child
                 if(node->left == NULL || node->right == NULL) {
                     Node *tempNode = node->left ? node->left : node->right;
                     // No child case
                     if (tempNode == NULL) {
-                        tempNode = node;
+                        if (node->next != NULL){
+                            node->next->prev = node->prev;
+                        } else {
+                            last = node->prev;
+                        }
+                        if (node->prev != NULL){
+                            node->prev->next = node->next;
+                        } else {
+                            first = node->next;
+                        }
                         node = NULL;
+                        free(node);
                     } else {// One child case
-                        if (tempNode->next != NULL){
-                            tempNode->next->prev = node;
-                        } else {
-                            last = node;
+                        if (temp->left == node) {
+                            temp->left = tempNode;
+                        } else if (temp->right == node) {
+                            temp->right = tempNode;
                         }
-                        if (tempNode->prev != NULL){
-                            tempNode->prev->next = node;
+                        if (node->next != NULL){
+                            node->next->prev = node->prev;
                         } else {
-                            first = node;
+                            last = node->prev;
                         }
-                        *node = *tempNode;
+                        if (node->prev != NULL){
+                            node->prev->next = node->next;
+                        } else {
+                            first = node->next;
+                        }
+                        node = NULL;
+                        free(node);
+                        node = tempNode;
                     }
-                    free(tempNode);
                 } else {
                     // node with two children
-                    Node* tempNode = tempNext;
+                    Node* tempNode = node->next;
                     node->key = tempNode->key;
+                    node->next = tempNode->next;
                     node->right = remove(node->right, tempNode->key);
                 }
             }
@@ -295,19 +302,6 @@ class AVL {
             if (root == NULL) {
                 first = NULL;
                 last = NULL;
-            } else if (temp != NULL) {
-                /*
-                if (temp->next != NULL){
-                    temp->next->prev = temp->prev;
-                } else {
-                    last = temp->prev;
-                }
-                if (temp->prev != NULL){
-                    temp->prev->next = temp->next;
-                } else {
-                    first = temp->next;
-                }
-                */
             }
         }
         void preOrder() {
@@ -435,6 +429,31 @@ int main(){
 
     avl2.remove(-1);
     cout << "remove -1: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(2);
+    cout << "remove 2: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.preOrder();
+    cout << endl;
+    avl2.remove(1);
+    cout << "remove 1: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.preOrder();
+    cout << endl;
+    avl2.remove(5);
+    cout << "remove 5: " << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
