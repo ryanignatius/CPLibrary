@@ -173,6 +173,93 @@ class AVL {
             return node;
         }
 
+        Node* remove(Node* node, dataType key) {
+            // STEP 1: PERFORM STANDARD BST DELETE
+            if (node == NULL) return node;
+            if (key < node->key) {
+                node->left = remove(node->left, key);
+            } else if(key > node->key) {
+                node->right = remove(node->right, key);
+            } else {
+                tempNext = node->next;
+                temp = node;
+                if (temp->next != NULL){
+                    temp->next->prev = temp->prev;
+                } else {
+                    last = temp->prev;
+                }
+                if (temp->prev != NULL){
+                    temp->prev->next = temp->next;
+                } else {
+                    first = temp->next;
+                }
+                // node with only one child or no child
+                if(node->left == NULL || node->right == NULL) {
+                    Node *tempNode = node->left ? node->left : node->right;
+                    // No child case
+                    if (tempNode == NULL) {
+                        tempNode = node;
+                        node = NULL;
+                    } else {// One child case
+                        if (tempNode->next != NULL){
+                            tempNode->next->prev = node;
+                        } else {
+                            last = node;
+                        }
+                        if (tempNode->prev != NULL){
+                            tempNode->prev->next = node;
+                        } else {
+                            first = node;
+                        }
+                        *node = *tempNode;
+                    }
+                    free(tempNode);
+                } else {
+                    // node with two children
+                    Node* tempNode = tempNext;
+                    node->key = tempNode->key;
+                    node->right = remove(node->right, tempNode->key);
+                }
+            }
+
+            // If the tree had only one node then return
+            if (node == NULL) return node;
+
+            // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+            node->height = 1 + max(getNodeHeight(node->left), getNodeHeight(node->right));
+            node->size = 1 + getNodeSize(node->left) + getNodeSize(node->right);
+
+            // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to
+            // check whether this node became unbalanced)
+            int balance = getBalance(node);
+
+            // If this node becomes unbalanced, then there are 4 cases
+
+            // Left Left Case
+            if (balance > 1 && getBalance(node->left) >= 0) {
+                return rightRotate(node);
+            }
+
+            // Left Right Case
+            if (balance > 1 && getBalance(node->left) < 0) {
+                node->left = leftRotate(node->left);
+                return rightRotate(node);
+            }
+
+            // Right Right Case
+            if (balance < -1 && getBalance(node->right) <= 0) {
+                return leftRotate(node);
+            }
+
+            // Right Left Case
+            if (balance < -1 && getBalance(node->right) > 0) {
+                node->right = rightRotate(node->right);
+                return leftRotate(node);
+            }
+
+            return node;
+        }
+
         void preOrder(Node *node) {
             if (node != NULL) {
                 printf("Key: %d, Height: %d, Size: %d\n", node->key, node->height, node->size);
@@ -201,6 +288,27 @@ class AVL {
             tempPrev = NULL;
             tempNext = NULL;
             root = insert(root, key);
+        }
+        void remove(dataType key) {
+            temp = NULL;
+            root = remove(root, key);
+            if (root == NULL) {
+                first = NULL;
+                last = NULL;
+            } else if (temp != NULL) {
+                /*
+                if (temp->next != NULL){
+                    temp->next->prev = temp->prev;
+                } else {
+                    last = temp->prev;
+                }
+                if (temp->prev != NULL){
+                    temp->prev->next = temp->next;
+                } else {
+                    first = temp->next;
+                }
+                */
+            }
         }
         void preOrder() {
             preOrder(root);
@@ -238,6 +346,100 @@ int main(){
     cout << "Find 25: " << (avl.find(25) != NULL) << endl;
     cout << "Find 50: " << (avl.find(50) != NULL) << endl;
     cout << "Find 35: " << (avl.find(35) != NULL) << endl;
+
+    AVL avl2;
+    avl2.insert(9);
+    avl2.insert(5);
+    avl2.insert(10);
+    avl2.insert(0);
+    avl2.insert(6);
+    avl2.insert(11);
+    avl2.insert(-1);
+    avl2.insert(1);
+    avl2.insert(2);
+
+    /* The constructed AVL Tree would be
+            9
+           /  \
+          1    10
+        /  \     \
+       0    5     11
+      /    /  \
+     -1   2    6
+    */
+ 
+    avl2.preOrder();
+    cout << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+    cout << avl2.begin()->key << " " << avl2.end()->key << endl;
+
+    avl2.remove(10);
+    cout << "remove 10: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+ 
+    /* The AVL Tree after deletion of 10
+            1
+           /  \
+          0    9
+        /     /  \
+       -1    5     11
+           /  \
+          2    6
+    */
+ 
+    avl2.preOrder();
+    cout << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(10);
+
+    avl2.preOrder();
+    cout << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(11);
+    cout << "remove 11: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(6);
+    cout << "remove 6: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(9);
+    cout << "remove 9: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(0);
+    cout << "remove 0: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
+    avl2.remove(-1);
+    cout << "remove -1: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    for (Node* node = avl2.begin(); node != NULL; node = node->next){
+        cout << node->key << " ";
+    }
+    cout << endl;
+
     return 0;
 }
 
