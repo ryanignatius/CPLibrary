@@ -33,6 +33,7 @@ class AVL {
         Node *temp;
         Node *tempPrev;
         Node *tempNext;
+        int numNodes;
 
         int getNodeHeight(Node *N) {
             if (N == NULL) {
@@ -112,6 +113,7 @@ class AVL {
         Node* insert(Node *node, dataType key) {
             // 1. Perform the normal BST insertion
             if (node == NULL) {
+                numNodes++;
                 temp = new Node(key);
                 temp->prev = tempPrev;
                 temp->next = tempNext;
@@ -185,15 +187,16 @@ class AVL {
             } else {
                 // node with only one child or no child
                 if (node->left == NULL || node->right == NULL) {
+                    numNodes--;
                     Node *tempNode = node->left ? node->left : node->right;
                     // No child case
                     if (tempNode == NULL) {
-                        if (node->next != NULL){
+                        if (node->next != NULL) {
                             node->next->prev = node->prev;
                         } else {
                             last = node->prev;
                         }
-                        if (node->prev != NULL){
+                        if (node->prev != NULL) {
                             node->prev->next = node->next;
                         } else {
                             first = node->next;
@@ -208,12 +211,12 @@ class AVL {
                                 temp->right = tempNode;
                             }
                         }
-                        if (node->next != NULL){
+                        if (node->next != NULL) {
                             node->next->prev = node->prev;
                         } else {
                             last = node->prev;
                         }
-                        if (node->prev != NULL){
+                        if (node->prev != NULL) {
                             node->prev->next = node->next;
                         } else {
                             first = node->next;
@@ -282,12 +285,16 @@ class AVL {
             root = NULL;
             first = NULL;
             last = NULL;
+            numNodes = 0;
         }
         Node* begin() {
             return first;
         }
         Node* end() {
             return last;
+        }
+        int size() {
+            return numNodes;
         }
         
         Node* find(dataType key) {
@@ -373,7 +380,7 @@ int main(){
     cout << avl2.begin()->key << " " << avl2.end()->key << endl;
 
     avl2.remove(10);
-    cout << "remove 10: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 10: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
  
     /* The AVL Tree after deletion of 10
             1
@@ -402,42 +409,42 @@ int main(){
     cout << endl;
 
     avl2.remove(11);
-    cout << "remove 11: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 11: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
     cout << endl;
 
     avl2.remove(6);
-    cout << "remove 6: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 6: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
     cout << endl;
 
     avl2.remove(9);
-    cout << "remove 9: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 9: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
     cout << endl;
 
     avl2.remove(0);
-    cout << "remove 0: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 0: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
     cout << endl;
 
     avl2.remove(-1);
-    cout << "remove -1: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove -1: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
     cout << endl;
 
     avl2.remove(2);
-    cout << "remove 2: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 2: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
@@ -446,7 +453,7 @@ int main(){
     avl2.preOrder();
     cout << endl;
     avl2.remove(1);
-    cout << "remove 1: " << avl2.begin()->key << " " << avl2.end()->key << endl;
+    cout << "remove 1: (" << avl2.size() << ") " << avl2.begin()->key << " " << avl2.end()->key << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
@@ -455,7 +462,7 @@ int main(){
     avl2.preOrder();
     cout << endl;
     avl2.remove(5);
-    cout << "remove 5: " << endl;
+    cout << "remove 5: (" << avl2.size() << ") " << endl;
     for (Node* node = avl2.begin(); node != NULL; node = node->next){
         cout << node->key << " ";
     }
