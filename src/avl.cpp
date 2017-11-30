@@ -179,12 +179,12 @@ class AVL {
             if (key < node->key) {
                 temp = node;
                 node->left = remove(node->left, key);
-            } else if(key > node->key) {
+            } else if (key > node->key) {
                 temp = node;
                 node->right = remove(node->right, key);
             } else {
                 // node with only one child or no child
-                if(node->left == NULL || node->right == NULL) {
+                if (node->left == NULL || node->right == NULL) {
                     Node *tempNode = node->left ? node->left : node->right;
                     // No child case
                     if (tempNode == NULL) {
@@ -201,10 +201,12 @@ class AVL {
                         node = NULL;
                         free(node);
                     } else {// One child case
-                        if (temp->left == node) {
-                            temp->left = tempNode;
-                        } else if (temp->right == node) {
-                            temp->right = tempNode;
+                        if (temp != NULL) {
+                            if (temp->left == node) {
+                                temp->left = tempNode;
+                            } else if (temp->right == node) {
+                                temp->right = tempNode;
+                            }
                         }
                         if (node->next != NULL){
                             node->next->prev = node->prev;
