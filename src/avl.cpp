@@ -33,7 +33,6 @@ class AVL {
         Node *temp;
         Node *tempPrev;
         Node *tempNext;
-        int numNodes;
 
         int getNodeHeight(Node *N) {
             if (N == NULL) {
@@ -113,7 +112,6 @@ class AVL {
         Node* insert(Node *node, dataType key) {
             // 1. Perform the normal BST insertion
             if (node == NULL) {
-                numNodes++;
                 temp = new Node(key);
                 temp->prev = tempPrev;
                 temp->next = tempNext;
@@ -187,7 +185,6 @@ class AVL {
             } else {
                 // node with only one child or no child
                 if (node->left == NULL || node->right == NULL) {
-                    numNodes--;
                     Node *tempNode = node->left ? node->left : node->right;
                     // No child case
                     if (tempNode == NULL) {
@@ -272,6 +269,18 @@ class AVL {
             return node;
         }
 
+        Node* getElement(Node* node, int k) {
+            int leftSize = getNodeSize(node->left) + 1;
+            if (k == leftSize) {
+                return node;
+            } else if (k < leftSize) {
+                return getElement(node->left, k);
+            } else if (k > leftSize) {
+                return getElement(node->right, k-leftSize);
+            }
+            return NULL;
+        }
+
         void preOrder(Node *node) {
             if (node != NULL) {
                 printf("Key: %d, Height: %d, Size: %d\n", node->key, node->height, node->size);
@@ -285,7 +294,6 @@ class AVL {
             root = NULL;
             first = NULL;
             last = NULL;
-            numNodes = 0;
         }
         Node* begin() {
             return first;
@@ -294,7 +302,7 @@ class AVL {
             return last;
         }
         int size() {
-            return numNodes;
+            return getNodeSize(root);
         }
         
         Node* find(dataType key) {
@@ -312,6 +320,14 @@ class AVL {
                 first = NULL;
                 last = NULL;
             }
+        }
+        Node* getElement(int k) {
+            // get k th smallest element in tree
+            // k = [1..size]
+            if (k < 1 || k > size()) {
+                return NULL;
+            }
+            return getElement(root, k);
         }
         void preOrder() {
             preOrder(root);
