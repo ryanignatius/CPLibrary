@@ -59,7 +59,7 @@ class Fenwick2D {
 			return sum;
 		}
 		dataType query(int b, int c){
-			return query1(b, c) * b * c - query2(b, c) - query3(b, c) + query4(b, c);
+			return query1(b, c) * b * c - query2(b, c) * b - query3(b, c) * c + query4(b, c);
 		}
 		void update1(int kk, int hh, dataType v){
 			for (int k = kk; k <= N; k += LSOne(k)){
@@ -99,13 +99,21 @@ class Fenwick2D {
 		}
 		void updateRange(int i, int j, int a, int b, dataType v){
 			update1(i, j, v);
-			update1(a + 1, b + 1, -v);
-			update2(i, j, v * a * (j - 1));
-			update2(a + 1, b + 1, -v * a * b);
-			update3(i, j, v * (i - 1) * b);
-			update3(a + 1, b + 1, -v * a * b);
+			update1(i, b + 1, -v);
+			update1(a + 1, j, -v);
+			update1(a + 1, b + 1, v);
+			update2(i, j, v * (j - 1));
+			update2(i, b + 1, -v * b);
+			update2(a + 1, j, -v * (j - 1));
+			update2(a + 1, b + 1, v * b);
+			update3(i, j, v * (i - 1));
+			update3(i, b + 1, -v * (i - 1));
+			update3(a + 1, j, -v * a);
+			update3(a + 1, b + 1, v * a);
 			update4(i, j, v * (i - 1) * (j - 1));
-			update4(a + 1, b + 1, -v * a * b);
+			update4(i, b + 1, -v * (i - 1) * b);
+			update4(a + 1, j, -v * a * (j - 1));
+			update4(a + 1, b + 1, v * a * b);
 		}
 };
 
@@ -117,6 +125,7 @@ int main(){
 	cout << fen.queryRange(2,1,3,1) << endl;
 	fen.updateRange(2,2,3,3,3);
 	cout << fen.queryRange(1,1,3,3) << endl;
+    cout << endl;
 
     Fenwick2D fen2(1, 5);
     fen2.updateRange(1,1,1,5,1);
@@ -125,5 +134,13 @@ int main(){
     fen2.updateRange(1,4,1,5,1);
     fen2.updateRange(1,5,1,5,1);
 	cout << fen2.queryRange(1,1,1,5) << endl;
+    cout << endl;
+
+    Fenwick2D fen3(5, 5);
+    fen3.updateRange(2,2,4,4,4);
+    cout << fen3.queryRange(1,1,3,3) << endl;
+    fen3.updateRange(5,5,5,5,3);
+    cout << fen3.queryRange(1,1,1,2) << endl;
+    cout << fen3.queryRange(2,2,5,3) << endl;
 	return 0;
 }
