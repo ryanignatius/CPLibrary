@@ -48,7 +48,7 @@ class MathFunction {
 			return factors;
 		}
 //};
-		long long fastExp(int base, int p){
+		long long fastExp(long long base, long long p){
 			if(p==0) return 1;
 			else if(p==1) return base;
 			else {
@@ -59,11 +59,11 @@ class MathFunction {
 			}
 		}
 		
-		long long fastExp(int base, int p, int md){
+		long long fastExp(long long base, long long p, long long md){
 			if (p == 0) return 1;
 			else if (p == 1) return base;
 			else {
-				long long res = fastExp(base, p/2);
+				long long res = fastExp(base, p/2, md);
 				res *= res;
 				res %= md;
 				if (p % 2 == 1) {
