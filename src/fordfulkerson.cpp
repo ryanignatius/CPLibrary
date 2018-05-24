@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// O(v^2 * flow)
 class FordFulkerson {
     private:
         static const int MAXN = 1010;
