@@ -113,5 +113,5 @@ int main(){
         paltree.addLetter(i);
     }
     paltree.processCC();
-	return 0;
+    return 0;
 }

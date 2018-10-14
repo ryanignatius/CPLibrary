@@ -119,4 +119,3 @@ int main() {
         printf("%.4lf %.4lf\n", res[i].real(), res[i].imag());
     return 0;
 }
-
