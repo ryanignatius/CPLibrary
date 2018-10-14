@@ -134,13 +134,13 @@ struct bigint {
         int norm = base / (firstDigit + 1);
         a *= norm;
         a *= norm;
-		while (a.z.empty() || a.z.size() % 2 == 1)
-			a.z.push_back(0);
+        while (a.z.empty() || a.z.size() % 2 == 1)
+            a.z.push_back(0);
         
         bigint r = (long long) a.z[n - 1] * base + a.z[n - 2];
         firstDigit = (int) sqrt((double) a.z[n - 1] * base + a.z[n - 2]);
         int q = firstDigit;
-		bigint res;
+        bigint res;
  
         for(int j = n / 2 - 1; j >= 0; j--) {
             for(; ; --q) {
@@ -154,8 +154,8 @@ struct bigint {
             res += q;
 
             if (j > 0) {
-				int d1 = res.z.size() + 2 < r.z.size() ? r.z[res.z.size() + 2] : 0;
-				int d2 = res.z.size() + 1 < r.z.size() ? r.z[res.z.size() + 1] : 0;
+                int d1 = res.z.size() + 2 < r.z.size() ? r.z[res.z.size() + 2] : 0;
+                int d2 = res.z.size() + 1 < r.z.size() ? r.z[res.z.size() + 1] : 0;
                 int d3 = res.z.size() < r.z.size() ? r.z[res.z.size()] : 0;
                 q = ((long long) d1 * base * base + (long long) d2 * base + d3) / (firstDigit * 2);
             }           
@@ -400,42 +400,42 @@ struct bigint {
 };
 
 bigint random_bigint(int n) {
-	string s;
-	for (int i = 0; i < n; i++) {
-		s += rand() % 10 + '0';
-	}
-	return bigint(s);
+    string s;
+    for (int i = 0; i < n; i++) {
+        s += rand() % 10 + '0';
+    }
+    return bigint(s);
 }
 
 // random tests
 int main() {
-	for(int i = 0; i < 1000; i++) {
-		cout << i << endl;
-		int n = rand() % 100 + 1;
-		bigint a = random_bigint(n);
-		bigint res = sqrt(a);
-		bigint xx = res * res;
-		bigint yy = (res + 1) * (res + 1);
+    for(int i = 0; i < 1000; i++) {
+        cout << i << endl;
+        int n = rand() % 100 + 1;
+        bigint a = random_bigint(n);
+        bigint res = sqrt(a);
+        bigint xx = res * res;
+        bigint yy = (res + 1) * (res + 1);
  
-		if (xx > a || yy <= a) {
-			cout << a << " " << res << endl;
-			break;
-		}
+        if (xx > a || yy <= a) {
+            cout << a << " " << res << endl;
+            break;
+        }
 
-		int m = rand() % n + 1;
-		bigint b = random_bigint(m) + 1;
-		res = a / b;
-		xx = res * b;
-		yy = b * (res + 1);
+        int m = rand() % n + 1;
+        bigint b = random_bigint(m) + 1;
+        res = a / b;
+        xx = res * b;
+        yy = b * (res + 1);
 
-		if (xx > a || yy <= a) {
-			cout << a << " " << b << " " << res << endl;
-			break;
-		}
-	}
+        if (xx > a || yy <= a) {
+            cout << a << " " << b << " " << res << endl;
+            break;
+        }
+    }
 
     bigint a = random_bigint(10000);
-	bigint b = random_bigint(2000);
+    bigint b = random_bigint(2000);
     clock_t start = clock();
     bigint c = a / b;
     fprintf(stdout, "time=%.3lfsec\n", 0.001 * (clock() - start));
@@ -443,5 +443,5 @@ int main() {
     bigint x = 5;
     x = 6;
     cout << x << endl;
+    return 0;
 }
-

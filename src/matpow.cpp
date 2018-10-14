@@ -55,4 +55,3 @@ int main(){
     cout << m2.mat[0][0] << " " << m2.mat[0][1] << " " << m2.mat[1][0] << " " << m2.mat[1][1] << endl;
     return 0;
 }
-
