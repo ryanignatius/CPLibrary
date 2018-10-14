@@ -8,9 +8,13 @@ typedef pair<ll, ll> pll;
 
 class MathFunction {
     private:
+        static const int MAXN = 1000100;
         long long sieve_size;
         bitset<5000010> bs;
         vector<int> primes;
+        ll fac[MAXN];
+        ll ifac[MAXN];
+        ll facmod;
 
     public:
         bool isPrime(long long N) {
@@ -62,7 +66,7 @@ class MathFunction {
             else {
                 long long res = fastExp(base, p/2);
                 res *= res;
-                if (p % 2 == 1) res *= base;
+                if (p & 1) res *= base;
                 return res;
             }
         }
@@ -74,12 +78,33 @@ class MathFunction {
                 long long res = fastExp(base, p/2, md);
                 res *= res;
                 res %= md;
-                if (p % 2 == 1) {
+                if (p & 1) {
                     res *= base;
                     res %= md;
                 }
                 return res;
             }
+        }
+
+        void prefac(int mx, ll mm) {
+            facmod = mm;
+            fac[0] = 1;
+            ifac[0] = 1;
+            for (int i=1; i<=mx; i++){
+                fac[i] = (fac[i-1]*i)%mm;
+                ifac[i] = fastExp(fac[i],mm-2,mm);
+            }
+        }
+
+        ll fastCombin(ll nn, ll cc) {
+            ll mm = facmod;
+            ll rr = nn-cc;
+            ll ret = fac[nn];
+            ret *= ifac[cc];
+            ret %= mm;
+            ret *= ifac[rr];
+            ret %= mm;
+            return ret;
         }
 
         // return a % b (positive value)
@@ -141,20 +166,29 @@ class MathFunction {
         }
 };
 
-int main(){
-    MathFunction fm;
-    fm.sieve(25);
-    for (int i=1; i<=20; i++){
-        cout << i << ": " << fm.isPrime(i) << endl;
+MathFunction *fm;
+
+int main() {
+    fm = new MathFunction();
+    fm->sieve(25);
+    for (int i=1; i<=20; i++) {
+        cout << i << ": " << fm->isPrime(i) << endl;
     }
-    cout << fm.fastExp(2, 20) << endl;
-    vector<int> pf = fm.primeFactors(100);
+    cout << fm->fastExp(2, 20) << endl;
+    vector<int> pf = fm->primeFactors(100);
     for (int i=0; i<pf.size(); i++){
         if (i == 0) cout << "100 = ";
         else cout << " x ";
         cout << pf[i];
     }
     cout << endl;
+
+    fm->prefac(1000, 1e9+7);
+    cout << fm->fastCombin(5, 0) << endl;
+    cout << fm->fastCombin(5, 1) << endl;
+    cout << fm->fastCombin(5, 2) << endl;
+    cout << fm->fastCombin(5, 3) << endl;
+    cout << fm->fastCombin(5, 4) << endl;
+    cout << fm->fastCombin(5, 5) << endl;
     return 0;
 }
-
