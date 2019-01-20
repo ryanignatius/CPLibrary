@@ -4,8 +4,6 @@ using namespace std;
 
 typedef long long weightType;
 
-const int MAXN = 1010;
-
 typedef vector<int> vi;
 typedef pair<int, int> ii;
 typedef pair<weightType, ii> edge;
