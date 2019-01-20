@@ -280,6 +280,17 @@ class AVL {
             }
             return NULL;
         }
+        
+        int getRank(Node* node, dataType key, int cnt) {
+            if (node == NULL) return -1;
+            if (key == node->key) {
+                return getNodeSize(node->left) + 1 + cnt;
+            } else if (key < node->key) {
+                return getRank(node->left, key, cnt);
+            } else if (key > node->key) {
+                return getRank(node->right, key, cnt + getNodeSize(node->left) + 1);
+            }
+        }
 
         void preOrder(Node *node) {
             if (node != NULL) {
@@ -328,6 +339,12 @@ class AVL {
                 return NULL;
             }
             return getElement(root, k);
+        }
+        int getRank(dataType key) {
+            // get rank of element in tree
+            // rank = [1..size] from smallest to largest
+            // or -1 if not found
+            return getRank(root, key, 0);
         }
         void preOrder() {
             preOrder(root);
