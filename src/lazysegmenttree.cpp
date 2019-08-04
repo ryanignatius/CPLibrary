@@ -69,8 +69,8 @@ class SegTree {
             if(lazy[node] != 0){
                 lazyFunction(node, start, end);
             }
-            if(start > end or start > r or end < l) return;
-            if(start >= l and end <= r){
+            if(start > end || start > r || end < l) return;
+            if(start >= l && end <= r){
                 updateFunction(node, start, end, val);
                 return;
             }
@@ -79,11 +79,11 @@ class SegTree {
             joinFunction(node);
         }
         treeType queryRange(int node, int start, int end, int l, int r){
-            if(start > end or start > r or end < l) return 0;
+            if(start > end || start > r || end < l) return 0;
             if(lazy[node] != 0){
                 lazyFunction(node, start, end);
             }
-            if(start >= l and end <= r) return tree[node];
+            if(start >= l && end <= r) return tree[node];
             treeType p1 = queryRange(left(node), start, mid(start, end), l, r);
             treeType p2 = queryRange(right(node), mid(start, end)+1, end, l, r);
             return queryFunction(p1, p2);
