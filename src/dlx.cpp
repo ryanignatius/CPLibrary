@@ -104,12 +104,12 @@ private:
         Node *h = header;
         Node *min_col = h->right;
         h = h->right->right;
-        do {
+        while (h != header) {
             if (h->nodeCount < min_col->nodeCount) {
                 min_col = h;
             }
             h = h->right;
-        } while (h != header);
+        }
         return min_col;
     }
 
@@ -279,8 +279,100 @@ public:
     }
 };
 
+class NQueen {
+private:
+    const static int MAXN = 1050;
+    int n;
+    int arr[MAXN];
+    DLX *dlx;
+
+    int getHorizontalConstraint(int i) {
+        return i;
+    }
+
+    int getVerticalConstraint(int j) {
+        return n + j;
+    }
+
+    int getDiagonal1Constraint(int i, int j) {
+        int diag = j - i + n - 1;
+        return (n * 2) + diag;
+    }
+
+    int getDiagonal2Constraint(int i, int j) {
+        int diag = j + i;
+        return (n * 4 - 1) + diag;
+    }
+
+    void addDlxRow(int i, int j) {
+        RowData data;
+        data.row = i + 1;
+        data.col = j + 1;
+        vector<int> cols;
+        cols.push_back(getHorizontalConstraint(i));
+        cols.push_back(getVerticalConstraint(j));
+        cols.push_back(getDiagonal1Constraint(i, j));
+        cols.push_back(getDiagonal2Constraint(i, j));
+        dlx->addRow(cols, data);
+    }
+
+public:
+    NQueen(int N) {
+        n = N;
+        dlx = new DLX(n * 6 - 2);
+    }
+
+    void addQueen(int row, int col) {
+        if (row == 0 && col == 0) {
+            return;
+        }
+        arr[row - 1] = col - 1;
+    }
+
+    void printBoard(string title) {
+        cout << title << "\n";
+        for (int i=0; i<n; i++) {
+            for (int j=0; j<n; j++) {
+                if (arr[i] == j) {
+                    cout << "Q";
+                } else {
+                    cout << ".";
+                }
+            }
+            cout << "\n";
+        }
+        cout << "\n";
+    }
+
+    void printAllSolutions() {
+        vector<vector<RowData> > sol = dlx->getSolutions();
+        for (int i=0; i<sol.size(); i++) {
+            NQueen s(n);
+            for (int j=0; j<sol[i].size(); j++) {
+                s.addQueen(sol[i][j].row, sol[i][j].col);
+            }
+            s.printBoard("Solution #" + to_string(i + 1) + ":");
+        }
+    }
+
+    void solve() {
+        for (int i=0; i<n; i++) {
+            for (int j=0; j<n; j++) {
+                addDlxRow(i, j);
+            }
+        }
+        for (int i=n*2; i<n*6-2; i++) {
+            vector<int> cols;
+            cols.push_back(i);
+            dlx->addRow(cols);
+        }
+        dlx->search(0);
+    }
+};
+
 DLX *dlx;
 Sudoku *sudoku;
+NQueen *nqueen;
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -378,5 +470,19 @@ int main() {
     sudoku->solve();
     sudoku->printSudoku("Original:");
     sudoku->printAllSolutions();
+
+    /*
+    Example 4: NQueen 4x4
+    */
+    nqueen = new NQueen(4);
+    nqueen->solve();
+    nqueen->printAllSolutions();
+
+    /*
+    Example 5: NQueen 6x6
+    */
+    nqueen = new NQueen(6);
+    nqueen->solve();
+    nqueen->printAllSolutions();
     return 0;
 }
