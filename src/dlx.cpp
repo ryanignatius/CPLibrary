@@ -355,6 +355,10 @@ public:
         }
     }
 
+    void printNumSolutions() {
+        cout << dlx->getSolutions().size() << "\n";
+    }
+
     void solve() {
         for (int i=0; i<n; i++) {
             for (int j=0; j<n; j++) {
@@ -484,5 +488,17 @@ int main() {
     nqueen = new NQueen(6);
     nqueen->solve();
     nqueen->printAllSolutions();
+
+    nqueen = new NQueen(8);
+    nqueen->solve();
+    nqueen->printNumSolutions();
+
+    nqueen = new NQueen(10);
+    nqueen->solve();
+    nqueen->printNumSolutions();
+
+    nqueen = new NQueen(12);
+    nqueen->solve();
+    nqueen->printNumSolutions();
     return 0;
 }
